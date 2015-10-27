@@ -2,12 +2,6 @@
 <html>
 <head>
   <title>Demo Oxford Weather Dashboard</title>
-  <link rel="shortcut icon" href="https://plot.ly/gh-pages/documentation/static//images/plotly-ico.png" />
-  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="static/css/keen-dashboards.css" />
-  <!-- For slider -->
-  <link rel="stylesheet" type="text/css" href="static/css/iThing.css" />
-
 <style type="text/css">
 #map {
     width: 100%;
@@ -108,6 +102,11 @@ function init()
     map.setCenter(lonlat, 12);
 }
 </script>
+  <link rel="shortcut icon" href="https://plot.ly/gh-pages/documentation/static//images/plotly-ico.png" />
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/css/keen-dashboards.css" />
+  <!-- For slider -->
+  <link rel="stylesheet" type="text/css" href="static/css/iThing.css" />
 </head>
 <body class="application" onload="init()">
 
@@ -136,7 +135,7 @@ function init()
                     Real-time weather maps
                 </div>
           <div class="chart-stage">
-            <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="./owm-dev.html"></iframe>
+            <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="http:/owm-dev.html"></iframe>
             </div>
           <div class="chart-notes">
             Precipitation, cloud cover, temperature and pressure data are pulled live from the OpenWeatherMap API. The map is centred on Oxford, UK. Layers can be turned on and off using the "+" menu.          

@@ -20,14 +20,11 @@ body {
     font-family: sans-serif;
 }
 </style>
-<link rel="stylesheet" href="mapStyle.css" type="text/css">
 <script src="http://openlayers.org/api/OpenLayers.js"></script>
+<link rel="stylesheet" href="mapStyle.css" type="text/css">
 <script type="text/javascript">
-
 function init()
 {
-
-
     //Center of map
     var lat = 51.749031; 
     var lon = -1.359207;
@@ -98,9 +95,7 @@ function init()
     map.addLayers([mapnik, opencyclemap, layer_cloud, layer_precipitation, pressure_contour, temperature]);
     map.setCenter(lonlat, 4);
 }
-
 </script>
-
   </head>
 
 <body onload="init()">
