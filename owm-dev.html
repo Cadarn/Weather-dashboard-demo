@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+<style type="text/css">
+#map {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    padding: 0px;
+    position: absolute;
+}
+#basicMap{
+    width:800px;
+    height: 480px;
+}
+body {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    font-family: sans-serif;
+}
+</style>
+<link rel="stylesheet" href="mapStyle.css" type="text/css">
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript">
+
+function init()
+{
+
+
+    //Center of map
+    var lat = 51.749031; 
+    var lon = -1.359207;
+    var lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+        var map = new OpenLayers.Map("basicMap");
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+    // Create overlays
+    //  OSM
+    var mapnik = new OpenLayers.Layer.OSM();
+    
+	var opencyclemap = new OpenLayers.Layer.XYZ(
+		"opencyclemap",
+		"http://a.tile3.opencyclemap.org/landscape/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 18, 
+			sphericalMercator: true
+		}
+	);
+	    		    
+    var layer_cloud = new OpenLayers.Layer.XYZ(
+        "Clouds",
+        "http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
+        {
+            isBaseLayer: false,
+            opacity: 0.7,
+            sphericalMercator: true,
+            numZoomLevels: 19,
+            visibility: false
+        }
+    );
+
+    var layer_precipitation = new OpenLayers.Layer.XYZ(
+        "Precipitation",
+        "http://${s}.tile.openweathermap.org/map/precipitation/${z}/${x}/${y}.png",
+        {
+            isBaseLayer: false,
+            opacity: 0.6,
+            sphericalMercator: true,
+            numZoomLevels: 19,
+            visibility: true
+        }
+    );
+
+	var pressure_contour = new OpenLayers.Layer.XYZ(
+		"Pressure",
+		"http://${s}.tile.openweathermap.org/map/pressure_cntr/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 19, 
+			isBaseLayer: false,
+			opacity: 0.4,
+			sphericalMercator: true,
+            visibility: true
+		}
+	);
+	
+	var temperature = new OpenLayers.Layer.XYZ(
+		"Temperature",
+		"http://${s}.tile.openweathermap.org/map/temp/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 19, 
+			isBaseLayer: false,
+			opacity: 0.3,
+			sphericalMercator: true,
+            visibility: false
+		}
+	);	
+
+    map.addLayers([mapnik, opencyclemap, layer_cloud, layer_precipitation, pressure_contour, temperature]);
+    map.setCenter(lonlat, 4);
+}
+
+</script>
+
+  </head>
+
+<body onload="init()">
+<div id="basicMap"></div>
+</body>
+</html>
+

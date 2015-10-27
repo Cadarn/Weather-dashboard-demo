@@ -1,15 +1,230 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
   <title>Demo Oxford Weather Dashboard</title>
-  <!-- Add some style to your site, see http://getbootstrap.com for details -->
-  <link rel="stylesheet"
-  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="shortcut icon" href="https://plot.ly/gh-pages/documentation/static//images/plotly-ico.png" />
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="static/css/keen-dashboards.css" />
+  <!-- For slider -->
+  <link rel="stylesheet" type="text/css" href="static/css/iThing.css" />
+
+<style type="text/css">
+#map {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    padding: 0px;
+    position: absolute;
+}
+#basicMap{  
+  bottom: 5px;
+  left: 5px;
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  height: 600px;
+}
+body {
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    font-family: sans-serif;
+}
+</style>
+<link rel="stylesheet" href="mapStyle.css" type="text/css">
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript">
+function init()
+{
+    //Center of map
+    var lat = 51.749031; 
+    var lon = -1.359207;
+    var lonlat = new OpenLayers.LonLat(lon, lat).transform(new OpenLayers.Projection("EPSG:4326"),new OpenLayers.Projection("EPSG:900913"));
+        var map = new OpenLayers.Map("basicMap");
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+    // Create overlays
+    //  OSM
+    var mapnik = new OpenLayers.Layer.OSM();
+    
+	var opencyclemap = new OpenLayers.Layer.XYZ(
+		"opencyclemap",
+		"http://a.tile3.opencyclemap.org/landscape/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 18, 
+			sphericalMercator: true
+		}
+	);
+	    		    
+    var layer_cloud = new OpenLayers.Layer.XYZ(
+        "Clouds",
+        "http://${s}.tile.openweathermap.org/map/clouds/${z}/${x}/${y}.png",
+        {
+            isBaseLayer: false,
+            opacity: 0.7,
+            sphericalMercator: true,
+            numZoomLevels: 19,
+            visibility: false
+        }
+    );
+
+    var layer_precipitation = new OpenLayers.Layer.XYZ(
+        "Precipitation",
+        "http://${s}.tile.openweathermap.org/map/precipitation/${z}/${x}/${y}.png",
+        {
+            isBaseLayer: false,
+            opacity: 0.6,
+            sphericalMercator: true,
+            numZoomLevels: 19,
+            visibility: true
+        }
+    );
+
+	var pressure_contour = new OpenLayers.Layer.XYZ(
+		"Pressure",
+		"http://${s}.tile.openweathermap.org/map/pressure_cntr/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 19, 
+			isBaseLayer: false,
+			opacity: 0.4,
+			sphericalMercator: true,
+            visibility: false
+		}
+	);
+	
+	var temperature = new OpenLayers.Layer.XYZ(
+		"Temperature",
+		"http://${s}.tile.openweathermap.org/map/temp/${z}/${x}/${y}.png",
+		{
+			numZoomLevels: 19, 
+			isBaseLayer: false,
+			opacity: 0.3,
+			sphericalMercator: true,
+            visibility: false
+		}
+	);	
+
+    map.addLayers([mapnik, opencyclemap, layer_cloud, layer_precipitation, pressure_contour, temperature]);
+    map.setCenter(lonlat, 12);
+}
+</script>
 </head>
-<body>
-  <h1>Demo Oxford Weather Dashboard</h1>
-  <p>Your text blahblahbhalbha</p>
-  <p>Another paragraph!  Maybe more text!</p>
+<body class="application" onload="init()">
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="navbar-brand" href="./">Demo Oxford Weather Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="chart-wrapper">
+                <div class="chart-title">
+                    Real-time weather maps
+                </div>
+          <div class="chart-stage">
+            <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="owm-dev.html"></iframe>
+            </div>
+          <div class="chart-notes">
+            Precipitation, cloud cover, temperature and pressure data are pulled live from the OpenWeatherMap API. The map is centred on Oxford, UK. Layers can be turned on and off using the "+" menu.          
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Historic Temperature Data
+          </div>
+          <div class="chart-stage">
+            <div id="grid-1-1">
+              <div>
+                <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="https://plot.ly/~Cadarn/195.embed"></iframe>
+              </div>
+            </div>
+          </div>
+          <div class="chart-notes">
+            Historic UK Met Office temperature records for the city of Oxford dating from 1853-present. The mean daily maximum and minimum for each month is displayed.
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Rainfall distribution
+          </div>
+          <div class="chart-stage">
+            <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="https://plot.ly/~Cadarn/219.embed"></iframe>
+          </div>
+          <div class="chart-notes">
+            The distribution of monthly rainfall calculated from historic UK Met Office temperature records for the city of Oxford dating from 1853-present. For each month the 1st quartile, median and 3rd quartile are shown. Outliers are indicated by the circle points.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-md-6">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Sunshine & Frost
+          </div>
+          <div class="chart-stage">
+            <iframe width="100%" height="480px" frameborder="0" scrolling="no" src="https://plot.ly/~Cadarn/246.embed"></iframe>
+          </div>
+          <div class="chart-notes">
+            Mean daily hours of sunshine per month are shown together with the mean number of days on which frost was reported in Oxford based upon records from 1853-present.
+          </div>
+        </div>
+      </div>
+      <!-- end of three -->
+    </div>
+   
+  </div>
+
+
+    <hr>
+
+    <p class="small text-muted">
+      Built with a free dashboard template from <a href="http://keen.github.io/dashboards/">Keen IO</a> and seven <a href="https://plot.ly/python/embedding-plotly-graphs-in-HTML/">embedded Plotly graphs</a>
+    </p>
+  </div>
+
+  <!--<script type="text/javascript" src="../../assets/lib/jquery/dist/jquery.min.js"></script>-->
+  <script type="text/javascript" src="static/js/slider/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="static/js/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="static/js/holderjs/holder.js"></script>
+  <script>
+    Holder.add_theme("white", { background:"#fff", foreground:"#a7a7a7", size:10 });
+  </script>
+
+  <!-- Slider widget files -->
+  <script type="text/javascript" src="static/js/slider/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSliderMouseTouch.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSliderDraggable.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSliderBar.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSliderHandle.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSliderLabel.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRangeSlider.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQDateRangeSliderHandle.js"></script>  
+  <script type="text/javascript" src="static/js/slider/jQDateRangeSlider.js"></script>
+  <script type="text/javascript" src="static/js/slider/jQRuler.js"></script>
+  <script type="text/javascript" src="static/js/slider/slider.js"></script>
+
 </body>
 </html>
